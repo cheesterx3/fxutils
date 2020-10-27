@@ -1,3 +1,21 @@
+/*
+ *
+ *  * Copyright © 2020 Shaklein Alexander
+ *  *
+ *  * Licensed under the Apache License, Version 2.0 (the "License");
+ *  * you may not use this file except in compliance with the License.
+ *  * You may obtain a copy of the License at
+ *  *
+ *  *     http://www.apache.org/licenses/LICENSE-2.0
+ *  *
+ *  * Unless required by applicable law or agreed to in writing, software
+ *  * distributed under the License is distributed on an "AS IS" BASIS,
+ *  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  * See the License for the specific language governing permissions and
+ *  * limitations under the License.
+ *
+ */
+
 package fx.utils.chart;
 
 import javafx.collections.ListChangeListener;
@@ -13,6 +31,7 @@ import java.util.Optional;
 import java.util.function.Function;
 
 class DefaultChartLegendCustomizer implements Customizer {
+    public static final String LEGEND_STYLE_CLASS = ".chart-legend";
     private final Map<Label, ListChangeListener<Node>> changeListenerMap = new HashMap<>();
     private final Chart chart;
     private final Function<String, Optional<Color>> colorByNameSupplier;
@@ -26,7 +45,7 @@ class DefaultChartLegendCustomizer implements Customizer {
     public void customize() {
         if (!isCustomized) {
             isCustomized = true;
-            final Node legend = chart.lookup(".chart-legend");
+            final Node legend = chart.lookup(LEGEND_STYLE_CLASS);
             if (legend instanceof Region) {
                 final Region region = (Region) legend;
                 region.getChildrenUnmodifiable().addListener((ListChangeListener<Node>) c -> {
