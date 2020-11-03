@@ -54,6 +54,7 @@ class DefaultBarCustomizer implements Customizer {
                     c.getAddedSubList().forEach(this::seriesAdded);
                 }
             });
+            barChart.getData().forEach(this::seriesAdded);
         }
     }
 

@@ -54,6 +54,7 @@ class DefaultChartLegendCustomizer implements Customizer {
                         c.getAddedSubList().forEach(this::legendChildAdded);
                     }
                 });
+                region.getChildrenUnmodifiable().forEach(this::legendChildAdded);
             }
         }
     }

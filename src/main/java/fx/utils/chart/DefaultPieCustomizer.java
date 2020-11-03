@@ -45,6 +45,7 @@ class DefaultPieCustomizer implements Customizer {
                 while (c.next())
                     c.getAddedSubList().forEach(this::dataAdded);
             });
+            pieChart.getData().forEach(this::dataAdded);
         }
     }
 
