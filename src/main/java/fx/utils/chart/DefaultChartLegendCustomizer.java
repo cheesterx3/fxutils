@@ -30,6 +30,8 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.function.Function;
 
+import static java.util.Objects.nonNull;
+
 class DefaultChartLegendCustomizer implements Customizer {
     public static final String LEGEND_STYLE_CLASS = ".chart-legend";
     private final Map<Label, ListChangeListener<Node>> changeListenerMap = new HashMap<>();
@@ -80,7 +82,8 @@ class DefaultChartLegendCustomizer implements Customizer {
         if (node instanceof Label) {
             final Label label = (Label) node;
             final ListChangeListener<Node> listener = changeListenerMap.remove(label);
-            label.getChildrenUnmodifiable().removeListener(listener);
+            if (nonNull(listener))
+                label.getChildrenUnmodifiable().removeListener(listener);
         }
     }
 
