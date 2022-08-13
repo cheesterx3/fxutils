@@ -68,7 +68,6 @@ class TimeControlSkin extends SkinBase<TimeControl> {
                 elementContainer(secondText));
         container.getStyleClass().add("text-input");
         container.setPadding(new Insets(4));
-        container.setSpacing(4D);
         container.setAlignment(Pos.CENTER_LEFT);
         container.maxWidthProperty().bind(container.widthProperty());
         getChildren().add(container);
@@ -80,7 +79,7 @@ class TimeControlSkin extends SkinBase<TimeControl> {
             text.setFocusTraversable(true);
             text.setOnMouseClicked(mouseEvent -> text.requestFocus());
             text.focusedProperty().addListener((observableValue, aBoolean, t1) -> {
-                text.getParent().setStyle(t1 ? "-fx-background-color: -fx-accent;-fx-background-radius: 8" : "");
+                text.getParent().setStyle(t1 ? "-fx-background-color: -fx-accent; -fx-background-radius: 2" : "");
                 text.setStyle(t1 ? "-fx-fill:#fff" : "");
                 isJustFocused = true;
             });
@@ -165,7 +164,8 @@ class TimeControlSkin extends SkinBase<TimeControl> {
 
         @Override
         public void set(int newValue) {
-            super.set(newValue > maxValue ? 0 : newValue);
+            final int value = newValue < 0 ? maxValue : newValue;
+            super.set(value > maxValue ? 0 : value);
         }
 
         int getMaxValue() {
