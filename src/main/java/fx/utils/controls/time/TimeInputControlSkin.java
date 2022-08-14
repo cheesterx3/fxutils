@@ -21,6 +21,7 @@ package fx.utils.controls.time;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleObjectProperty;
+import javafx.css.PseudoClass;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.SkinBase;
@@ -33,7 +34,8 @@ import java.time.LocalTime;
 import java.util.*;
 import java.util.stream.Stream;
 
-class TimeControlSkin extends SkinBase<TimeControl> {
+class TimeInputControlSkin extends SkinBase<TimeInputControl> {
+    private static final PseudoClass PSEUDO_CLASS_SELECTED = PseudoClass.getPseudoClass("selected");
     private final Text hourText;
     private final Text minuteText;
     private final Text secondText;
@@ -44,11 +46,10 @@ class TimeControlSkin extends SkinBase<TimeControl> {
 
     private final ObjectProperty<LocalTime> time = new SimpleObjectProperty<>();
     private final Map<Text, MaxRestrictedIntegerProperty> fieldMapping = new LinkedHashMap<>();
-    private MaxRestrictedIntegerProperty selectedProperty;
     private boolean isJustFocused;
     private String currentValue;
 
-    protected TimeControlSkin(TimeControl control) {
+    protected TimeInputControlSkin(TimeInputControl control) {
         super(control);
 
         time.bindBidirectional(control.timeProperty());
@@ -66,21 +67,21 @@ class TimeControlSkin extends SkinBase<TimeControl> {
                 elementContainer(minuteText),
                 createSeparator(secondText),
                 elementContainer(secondText));
-        container.getStyleClass().add("text-input");
+        container.getStyleClass().addAll("text-input", "time-input-control");
         container.setPadding(new Insets(4));
         container.setAlignment(Pos.CENTER_LEFT);
         container.maxWidthProperty().bind(container.widthProperty());
         getChildren().add(container);
 
         Stream.of(hourText, minuteText, secondText).forEach(text -> {
+            text.getStyleClass().add("time-input-control-text");
             final MaxRestrictedIntegerProperty prop = fieldMapping.get(text);
             text.textProperty().bind(prop.asString("%02d"));
             text.fontProperty().bind(getSkinnable().fontProperty());
             text.setFocusTraversable(true);
             text.setOnMouseClicked(mouseEvent -> text.requestFocus());
             text.focusedProperty().addListener((observableValue, aBoolean, t1) -> {
-                text.getParent().setStyle(t1 ? "-fx-background-color: -fx-accent; -fx-background-radius: 2" : "");
-                text.setStyle(t1 ? "-fx-fill:#fff" : "");
+                text.getParent().pseudoClassStateChanged(PSEUDO_CLASS_SELECTED, t1);
                 isJustFocused = true;
             });
             text.setOnKeyPressed(keyEvent -> {
@@ -128,6 +129,7 @@ class TimeControlSkin extends SkinBase<TimeControl> {
 
     private VBox elementContainer(Text text) {
         final VBox container = new VBox(text);
+        container.getStyleClass().add("time-input-control-element");
         container.setPadding(new Insets(2D));
         return container;
     }

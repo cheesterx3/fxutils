@@ -29,24 +29,26 @@ import javafx.scene.text.Font;
 
 import java.time.LocalTime;
 
-public class TimeControl extends Control {
+public class TimeInputControl extends Control {
     private final ObjectProperty<Font> font = new SimpleObjectProperty<>(Font.font(13));
     private final ObjectProperty<LocalTime> time = new SimpleObjectProperty<>();
     private final BooleanProperty showSeconds = new SimpleBooleanProperty(true);
 
-    public TimeControl() {
+    public TimeInputControl() {
         this(LocalTime.now());
     }
 
-    public TimeControl(LocalTime time) {
+    public TimeInputControl(LocalTime time) {
         this.time.set(time);
+        this.getStylesheets().add(getClass().getResource("time-input-control.css").toExternalForm());
+        this.applyCss();
         this.setAccessibleRole(AccessibleRole.TEXT_FIELD);
         this.setFocusTraversable(true);
     }
 
     @Override
     protected Skin<?> createDefaultSkin() {
-        return new TimeControlSkin(this);
+        return new TimeInputControlSkin(this);
     }
 
     public ObjectProperty<Font> fontProperty() {
