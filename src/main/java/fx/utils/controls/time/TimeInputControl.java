@@ -24,7 +24,6 @@ import javafx.css.*;
 import javafx.scene.AccessibleRole;
 import javafx.scene.control.Control;
 import javafx.scene.control.Skin;
-import javafx.scene.control.TextInputControl;
 import javafx.scene.text.Font;
 
 import java.time.LocalDate;
@@ -162,8 +161,13 @@ public class TimeInputControl extends Control {
     }
 
     public void setLocalDateTime(LocalDateTime value) {
-        date.set(value.toLocalDate());
-        time.set(value.toLocalTime());
+        if (value != null) {
+            date.set(value.toLocalDate());
+            time.set(value.toLocalTime());
+        } else {
+            date.set(null);
+            time.set(null);
+        }
     }
 
     public LocalDateTime getLocalDateTime() {
@@ -200,6 +204,7 @@ public class TimeInputControl extends Control {
                 return n.font == null || !n.font.isBound();
             }
 
+            @SuppressWarnings({"rawtypes","unchecked"})
             public StyleableProperty<Font> getStyleableProperty(TimeInputControl n) {
                 return (StyleableProperty)n.fontProperty();
             }
