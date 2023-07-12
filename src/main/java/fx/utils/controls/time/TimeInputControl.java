@@ -21,6 +21,8 @@ package fx.utils.controls.time;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.*;
 import javafx.css.*;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.scene.AccessibleRole;
 import javafx.scene.control.Control;
 import javafx.scene.control.Skin;
@@ -57,8 +59,27 @@ public class TimeInputControl extends Control {
         this.dateTime.bind(Bindings.createObjectBinding(() -> this.date.get() != null && this.time.get() != null
                 ? LocalDateTime.of(this.date.get(), this.time.get())
                 : null, this.date, this.time));
-
     }
+
+    private final ObjectProperty<EventHandler<ActionEvent>> onAction = new ObjectPropertyBase<EventHandler<ActionEvent>>() {
+        @Override
+        protected void invalidated() {
+            setEventHandler(ActionEvent.ACTION, get());
+        }
+
+        @Override
+        public Object getBean() {
+            return TimeInputControl.this;
+        }
+
+        @Override
+        public String getName() {
+            return "onAction";
+        }
+    };
+    public final ObjectProperty<EventHandler<ActionEvent>> onActionProperty() { return onAction; }
+    public final EventHandler<ActionEvent> getOnAction() { return onActionProperty().get(); }
+    public final void setOnAction(EventHandler<ActionEvent> value) { onActionProperty().set(value); }
 
     @Override
     protected Skin<?> createDefaultSkin() {

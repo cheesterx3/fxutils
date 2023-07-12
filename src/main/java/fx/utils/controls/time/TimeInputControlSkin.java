@@ -22,6 +22,7 @@ import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.css.PseudoClass;
+import javafx.event.ActionEvent;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.geometry.VPos;
@@ -155,10 +156,25 @@ class TimeInputControlSkin extends SkinBase<TimeInputControl> {
         }
     }
 
+    private void selectPrevious(Text text) {
+        if (text == secondText) {
+            minuteText.requestFocus();
+        } else if (text == minuteText) {
+            hourText.requestFocus();
+        } else if (text == hourText && getSkinnable().isShowDate()) {
+            yearText.requestFocus();
+        } else if (text == yearText) {
+            monthText.requestFocus();
+        } else if (text == monthText) {
+            dayText.requestFocus();
+        }
+    }
+
     private VBox elementContainer(Text text) {
         final VBox container = new VBox(text);
         container.getStyleClass().add("time-input-control-element");
         container.setAlignment(Pos.CENTER);
+        container.setOnMouseClicked(mouseEvent -> text.requestFocus());
         return container;
     }
 
@@ -201,10 +217,8 @@ class TimeInputControlSkin extends SkinBase<TimeInputControl> {
     }
 
     private class ElementText extends Text {
-        private final RestrictedIntegerProperty property;
 
         private ElementText(RestrictedIntegerProperty property) {
-            this.property = property;
             getStyleClass().add("time-input-control-text");
             setTextOrigin(VPos.CENTER);
             textProperty().bind(property.asString("%0" + property.getMaxDigitsCount() + "d"));
@@ -237,6 +251,14 @@ class TimeInputControlSkin extends SkinBase<TimeInputControl> {
                 } else if (keyEvent.getCode() == KeyCode.DOWN) {
                     property.set(property.get() - 1);
                     keyEvent.consume();
+                } else if (keyEvent.getCode() == KeyCode.RIGHT) {
+                    selectNext(this);
+                    keyEvent.consume();
+                } else if (keyEvent.getCode() == KeyCode.LEFT) {
+                    selectPrevious(this);
+                    keyEvent.consume();
+                } else if (keyEvent.getCode() == KeyCode.ENTER) {
+                    getSkinnable().fireEvent(new ActionEvent());
                 }
             });
         }
